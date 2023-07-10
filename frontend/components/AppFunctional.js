@@ -18,13 +18,13 @@ export default function AppFunctional(props) {
   function getXY() {
     const cordMap = {
       0: "(1,1)",
-      1: "(1,2)",
-      2: "(1,3)",
-      3: "(2,1)",
+      1: "(2,1)",
+      2: "(3,1)",
+      3: "(1,2)",
       4: "(2,2)",
-      5: "(2,3)",
-      6: "(3,1)",
-      7: "(3,2)",
+      5: "(3,2)",
+      6: "(1,3)",
+      7: "(2,3)",
       8: "(3,3)",
     };
     return cordMap[index];
@@ -101,7 +101,7 @@ export default function AppFunctional(props) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">Coordinates {getXY()}</h3>
-        <h3 id="steps">You moved {steps} times</h3>
+        <h3 id="steps">You moved {steps} {steps === 1 ? 'time' : 'times'}</h3>
       </div>
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
