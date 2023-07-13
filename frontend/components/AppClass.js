@@ -26,15 +26,15 @@ export default class AppClass extends React.Component {
     // It it not necessary to have a state to track the coordinates.
     // It's enough to know what index the "B" is at, to be able to calculate them.
     const cordMap = {
-      0: '(1, 1)',
-      1: '(2, 1)',
-      2: '(3, 1)',
-      3: '(1, 2)',
-      4: '(2, 2)',
-      5: '(3, 2)',
-      6: '(1, 3)',
-      7: '(2, 3)',
-      8: '(3, 3)',
+      0: "(1,1)",
+      1: "(2,1)",
+      2: "(3,1)",
+      3: "(1,2)",
+      4: "(2,2)",
+      5: "(3,2)",
+      6: "(1,3)",
+      7: "(2,3)",
+      8: "(3,3)",
     };
     return cordMap[this.state.index];
   };
@@ -112,23 +112,19 @@ export default class AppClass extends React.Component {
 
   onSubmit = (evt) => {
     evt.preventDefault();
-    const {steps, email,}=this.state
+    const { steps, email } = this.state;
     const cord = this.getXY(this.state.index);
     const x = cord[1];
     const y = cord[3];
-      const postObject = { x, y, steps, email};
+    const postObject = { x, y, steps, email };
     if (email.length <= 0) {
-      this.setState({...this.state, message: 'Ouch: email is required'});
+      this.setState({ ...this.state, message: "Ouch: email is required" });
     } else {
-    axios
-      .post("http://localhost:9000/api/result", postObject)
-      .then(res => {console.log(res);
-      this.setState({...this.state, message: res.data.message});
-      }).catch(err => {console.log(err);
-      this.setState({...this.state, email:''});
-  });
-}
-  }
+      axios.post("http://localhost:9000/api/result", postObject).then((res) => {
+        console.log(res);
+      });
+    }
+  };
 
   render() {
     const { className } = this.props;
