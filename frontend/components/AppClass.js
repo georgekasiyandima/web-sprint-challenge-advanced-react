@@ -58,7 +58,7 @@ export default class AppClass extends React.Component {
             message: initialMessage,
           });
         } else {
-          this.setState({ ...this.state, message: "You can not move left" });
+          this.setState({ ...this.state, message: "You can't go left" });
         }
         break;
       case "right":
@@ -74,7 +74,7 @@ export default class AppClass extends React.Component {
             message: initialMessage,
           });
         } else {
-          this.setState({ ...this.state, message: "You can not move right" });
+          this.setState({ ...this.state, message: "You can't go right" });
         }
         break;
       case "up":
@@ -86,7 +86,7 @@ export default class AppClass extends React.Component {
             message: initialMessage,
           });
         } else {
-          this.setState({ ...this.state, message: "You can not move up" });
+          this.setState({ ...this.state, message: "You can't go up" });
         }
         break;
       case "down":
@@ -117,12 +117,22 @@ export default class AppClass extends React.Component {
     const x = cord[1];
     const y = cord[3];
     const postObject = { x, y, steps, email };
-    if (email.length <= 0) {
-      this.setState({ ...this.state, message: "Ouch: email is required" });
+    if (this.state.email.length <= 0) {
+      this.setState({ ...this.state, message: "Ouch: email is required." });
     } else {
-      axios.post("http://localhost:9000/api/result", postObject).then((res) => {
-        console.log(res);
-      });
+      axios
+        .post("http://localhost:9000/api/result", postObject)
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            ...this.state,
+            message: res.data.message,
+            email: "",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -132,7 +142,10 @@ export default class AppClass extends React.Component {
       <div id="wrapper" className={className}>
         <div className="info">
           <h3 id="coordinates">Coordinates: {this.getXY()}</h3>
-          <h3 id="steps">You moved {this.state.steps} times</h3>
+          <h3 id="steps">
+            You moved {this.state.steps}{" "}
+            {this.state.steps === 1 ? "time" : "times"}
+          </h3>
         </div>
         <div id="grid">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
@@ -170,6 +183,7 @@ export default class AppClass extends React.Component {
             id="email"
             type="email"
             placeholder="type email"
+            value={this.state.email}
           ></input>
           <input id="submit" type="submit"></input>
         </form>

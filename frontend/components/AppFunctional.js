@@ -17,15 +17,15 @@ export default function AppFunctional(props) {
 
   function getXY() {
     const cordMap = {
-      0: "(1,1)",
-      1: "(2,1)",
-      2: "(3,1)",
-      3: "(1,2)",
-      4: "(2,2)",
-      5: "(3,2)",
-      6: "(1,3)",
-      7: "(2,3)",
-      8: "(3,3)",
+      0: '(1,1)',
+      1: '(2,1)',
+      2: '(3,1)',
+      3: '(1,2)',
+      4: '(2,2)',
+      5: '(3,2)',
+      6: '(1,3)',
+      7: '(2,3)',
+      8: '(3,3)',
     };
     return cordMap[index];
   }
@@ -46,7 +46,7 @@ export default function AppFunctional(props) {
           setIndex(index - 1);
           setMessage(initialMessage);
         } else {
-          setMessage("You can not move left");
+          setMessage("You can't go left");
         }
         break;
       case "right":
@@ -55,7 +55,7 @@ export default function AppFunctional(props) {
           setIndex(index + 1);
           setMessage(initialMessage);
         } else {
-          setMessage("You can not move right");
+          setMessage("You can't go right");
         }
         break;
       case "up":
@@ -64,7 +64,7 @@ export default function AppFunctional(props) {
           setIndex(index - 3);
           setMessage(initialMessage);
         } else {
-          setMessage("You can not move up");
+          setMessage("You can't go up");
         }
         break;
       case "down":
@@ -73,7 +73,7 @@ export default function AppFunctional(props) {
           setIndex(index + 3);
           setMessage(initialMessage);
         } else {
-          setMessage("You can not move down");
+          setMessage("You can't go down");
         }
         break;
       default:
@@ -94,8 +94,14 @@ export default function AppFunctional(props) {
     const postObject = { x, y, steps, email };
     axios
       .post("http://localhost:9000/api/result", postObject)
-      .then((res) => console.log(res));
-  }
+      .then(res => {
+        setMessage(res.data.message);
+        setEmail('');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
 
   return (
     <div id="wrapper" className={props.className}>
@@ -136,6 +142,7 @@ export default function AppFunctional(props) {
           id="email"
           type="email"
           placeholder="type email"
+          value={email}
         ></input>
         <input id="submit" type="submit"></input>
       </form>
