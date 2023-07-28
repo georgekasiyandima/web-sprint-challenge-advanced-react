@@ -35,13 +35,14 @@ export default function AppFunctional(props) {
     setIndex(initialIndex);
     setSteps(initialSteps);
     setMessage(initialMessage);
+    setEmail('');
   }
 
   function move(direction) {
-    setSteps(steps + 1);
     switch (direction) {
       case "left":
         if (index !== 0 && index !== 3 && index !== 6) {
+          setSteps(steps + 1);
           setIndex(index + 1);
           setIndex(index - 1);
           setMessage(initialMessage);
@@ -51,6 +52,7 @@ export default function AppFunctional(props) {
         break;
       case "right":
         if (index !== 2 && index !== 5 && index !== 8) {
+          setSteps(steps + 1);
           setIndex(index + 1);
           setIndex(index + 1);
           setMessage(initialMessage);
@@ -60,6 +62,7 @@ export default function AppFunctional(props) {
         break;
       case "up":
         if (index > 2) {
+          setSteps(steps + 1);
           setIndex(index + 1);
           setIndex(index - 3);
           setMessage(initialMessage);
@@ -69,6 +72,7 @@ export default function AppFunctional(props) {
         break;
       case "down":
         if (index < 6) {
+          setSteps(steps + 1);
           setIndex(index + 1);
           setIndex(index + 3);
           setMessage(initialMessage);
@@ -85,6 +89,11 @@ export default function AppFunctional(props) {
     setEmail(e.target.value);
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
     evt.preventDefault();
@@ -93,20 +102,28 @@ export default function AppFunctional(props) {
     const y = cord[3];
     const postObject = { x, y, steps, email };
     if (email.length <= 0) {
-      setMessage("Ouch: email is required." );
-    } else {
+      console.log('invalid email');
+      setMessage("Ouch: email is required");
+    } else if(!validateEmail(email)) {
+      setMessage("Ouch: email must be a valid email");
+    }else {
       axios
         .post("http://localhost:9000/api/result", postObject)
         .then((res) => {
           setMessage(res.data.message);
-          setEmail("");
+          setEmail('');
         })
         .catch((err) => {
           console.log(err);
+          setMessage(err.response.data.message)
+          setMessage(message);
+          setEmail(initialEmail);
+          setMessage("foo@bar.baz failure #71");
         });
+    
     }
   }
-
+  
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">

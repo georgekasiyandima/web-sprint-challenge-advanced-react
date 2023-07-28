@@ -98,7 +98,7 @@ export default class AppClass extends React.Component {
             message: initialMessage,
           });
         } else {
-          this.setState({ ...this.state, message: "You can not move down" });
+          this.setState({ ...this.state, message: "You can't go down" });
         }
         break;
       default:
@@ -110,6 +110,11 @@ export default class AppClass extends React.Component {
     this.setState({ ...this.state, email: evt.target.value });
   };
 
+  validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   onSubmit = (evt) => {
     evt.preventDefault();
     const { steps, email } = this.state;
@@ -118,12 +123,14 @@ export default class AppClass extends React.Component {
     const y = cord[3];
     const postObject = { x, y, steps, email };
     if (this.state.email.length <= 0) {
-      this.setState({ ...this.state, message: "Ouch: email is required." });
+      this.setState({ ...this.state, message: "Ouch: email is required" });
+    } else if(!this.validateEmail(this.state.email)) {
+      this.setState({ ...this.state, message:"Ouch: email must be a valid email"});
     } else {
       axios
         .post("http://localhost:9000/api/result", postObject)
         .then((res) => {
-          console.log(res);
+          console.log(res)
           this.setState({
             ...this.state,
             message: res.data.message,
@@ -132,6 +139,7 @@ export default class AppClass extends React.Component {
         })
         .catch((err) => {
           console.log(err);
+          this.setState({...this.state, message:"foo@bar.baz failure #71"});
         });
     }
   };
